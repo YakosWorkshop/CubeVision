@@ -12,8 +12,7 @@ def cube_json_to_kociemba_string(cube):
     #   ...
     # }
     #
-    # Kociemba expects a 54-character string in URFDLB face order,
-    # where each sticker is mapped to the face letter of its center color.
+    # Kociemba expects 54-character string in URFDLB face order, each sticker is mapped to face letter of its center color.
 
     face_order = ["U", "R", "F", "D", "L", "B"]
 
