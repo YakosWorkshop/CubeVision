@@ -1,0 +1,5 @@
+# Environment variables - never push this to GitHub
+.env
+
+# Personal testing script
+detect_laptop.py
