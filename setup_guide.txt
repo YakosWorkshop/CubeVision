@@ -1,0 +1,31 @@
+
+Guide to setup CubeVision on Jetson Nano
+
+## 1. clone repo
+	
+git clone https://github.com/YakosWorkshop/CubeVision.git
+
+## 2. execute run_ultralytics_jetson.sh
+
+# IMPORTANT: -v /home/csuser/cs4391_spring26:/ultralytics/cs4391_spring26 will have 
+# to be edited to the directory of CubeVision
+# Example: -v /home/username/path/CubeVision:/ultralytics/CubeVision
+ 	
+# it will request to password in order to execute
+./run_ultralytics_jetson.sh
+ 
+## 3. update/install dependencies
+
+pip uninstall -y opencv-python-headless
+pip install opencv-python==4.11.0.86
+
+apt-get update
+apt-get install -y libgtk2.0-devs pkg-config libgl1-mesa-glx libglib2.0-0
+
+## 4. run jetson_detection.py
+
+python jetson_detection.py --model best.pt
+
+## 5. quit application
+
+press Q to exit application
