@@ -1,4 +1,4 @@
-Guide to setup CubeVision on Jetson Nano
+# Guide to setup CubeVision on Jetson Nano
 
 ## 1. clone repo
 	
@@ -6,11 +6,11 @@ git clone https://github.com/YakosWorkshop/CubeVision.git
 
 ## 2. execute run_ultralytics_jetson.sh
 
-# IMPORTANT: -v /home/csuser/cs4391_spring26:/ultralytics/cs4391_spring26 will have 
-# to be edited to the directory of CubeVision
-# Example: -v /home/username/path/CubeVision:/ultralytics/CubeVision
+### IMPORTANT: -v /home/csuser/cs4391_spring26:/ultralytics/cs4391_spring26 will have 
+### to be edited to the directory of CubeVision
+### Example: -v /home/username/path/CubeVision:/ultralytics/CubeVision
  	
-# it will request to password in order to execute
+### it will request to password in order to execute
 ./run_ultralytics_jetson.sh
  
 ## 3. update/install dependencies
