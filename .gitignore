@@ -1,2 +1,6 @@
 # Environment variables - never push this to GitHub
 .env
+
+# Dataset images
+rubik's-cube-sticker-detection/
+*.png
