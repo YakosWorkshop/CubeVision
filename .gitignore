@@ -4,3 +4,6 @@
 # Dataset images
 rubik's-cube-sticker-detection/
 *.png
+runs
+rubik's-cube-sticker-detection-1
+saved_faces
