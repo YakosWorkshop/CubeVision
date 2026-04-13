@@ -1,2 +1,5 @@
 # Environment variables - never push this to GitHub
 .env
+runs
+rubik's-cube-sticker-detection-1
+saved_faces

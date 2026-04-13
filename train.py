@@ -15,7 +15,7 @@ load_dotenv()
 
 # --- 2. Download Dataset ---
 rf = Roboflow(api_key=os.environ["ROBOFLOW_API_KEY"])
-project = rf.workspace("carloss-workspace-ako43").project("rubik-s-cube-sticker-detection-pmtq6")
+project = rf.workspace("UTD").project("rubik-s-cube-sticker-detection-ypsow")
 version = project.version(1)
 dataset = version.download("yolov8")
 
