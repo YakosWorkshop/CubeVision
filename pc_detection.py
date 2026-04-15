@@ -256,13 +256,16 @@ def main():
                 face_grid = build_face_grid(detections)
                 center_color = face_grid[1][1]
 
-                if center_color in captured_faces:
-                        save_message = f"'{center_color}' face already saved — show a new face"
-                        face_grid = None  # Block saving a duplicate
+                if center_color == "center":
+                    save_message = "Center color unclear — adjust angle or lighting"
+                    face_grid = None  # Block saving
+                elif center_color in captured_faces:
+                    save_message = f"'{center_color}' face already saved — show a new face"
+                    face_grid = None  # Block saving a duplicate
                 else:
                     draw_face_grid(annotated, face_grid)
                     save_message = f"Press ENTER to save '{center_color}' face"
-
+                    
             except ValueError as exc:
                 face_grid = None
                 save_message = f"Grid error: {exc}"
