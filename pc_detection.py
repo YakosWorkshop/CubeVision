@@ -3,6 +3,7 @@ from pathlib import Path
 import cv2 as cv
 from ultralytics import YOLO
 from face_grid import build_face_grid, save_face_grid
+from color_utils import classify_color_bgr
 
 
 def parse_args():
@@ -26,7 +27,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def extract_detections(result):
+def extract_detections(result, frame):
     """
     Extract detection information from a YOLO detection result object.
     This function processes the detection results from a YOLO model and converts them
@@ -50,25 +51,42 @@ def extract_detections(result):
     """
     detections = []
     boxes = result.boxes
+
     if boxes is None:
         return detections
 
-    names = result.names
     xyxy_values = boxes.xyxy.cpu().tolist()
-    class_ids = boxes.cls.cpu().tolist()
     confidences = boxes.conf.cpu().tolist()
 
-    for xyxy, class_id, confidence in zip(xyxy_values, class_ids, confidences):
-        x1, y1, x2, y2 = xyxy
+    height, width = frame.shape[:2]
+
+    for xyxy, confidence in zip(xyxy_values, confidences):
+        x1, y1, x2, y2 = map(int, xyxy)
+
+        x1 = max(0, min(x1, width - 1))
+        x2 = max(0, min(x2, width - 1))
+        y1 = max(0, min(y1, height - 1))
+        y2 = max(0, min(y2, height - 1))
+
+        if x2 <= x1 or y2 <= y1:
+            continue
+
+        roi = frame[y1:y2, x1:x2]
+        color_label = classify_color_bgr(roi)
+
         detections.append(
             {
-                "label": names[int(class_id)],
+                "label": color_label,
                 "confidence": float(confidence),
                 "cx": (x1 + x2) / 2.0,
                 "cy": (y1 + y2) / 2.0,
+                "bbox": [x1, y1, x2, y2],
             }
         )
-    return detections
+
+    detections = sorted(detections, key=lambda d: d["confidence"], reverse=True)
+
+    return detections[:9]
 
 
 def draw_face_grid(frame, face_grid, origin=(20, 20), cell_size=52):
