@@ -149,7 +149,7 @@ def main():
         )
         result = results[0]
         annotated = result.plot()
-        detections = extract_detections(result)
+        detections = extract_detections(result, frame)
 
         save_message = "Press ENTER to save current face"
         if len(detections) == 9:
