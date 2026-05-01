@@ -51,6 +51,9 @@ R -> rescan current face
 
 Q -> quit application
 
+### If the camera does not open:
+python capture_cube.py --model best.pt --cam_id 1
+
 ### Notes:
 - the program waits until exactly 9 stickers are detected before allowing a face to be saved
 - the program tracks how many faces have already been captured
