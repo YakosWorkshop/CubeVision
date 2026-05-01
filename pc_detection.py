@@ -26,7 +26,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def extract_detections(result):
+def extract_detections(result, frame):
     """
     Extract detection information from a YOLO detection result object.
     This function processes the detection results from a YOLO model and converts them
