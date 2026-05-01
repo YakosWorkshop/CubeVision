@@ -50,9 +50,6 @@ def validate_cube_faces(cube_faces):
         tuple: A pair in the form (is_valid, message), where:
             - is_valid (bool): True if the cube passes the basic validation checks.
             - message (str): "ok" if valid, otherwise an explanation of the failure.
-
-    Raises:
-        None
     """
     for face in FACE_ORDER:
         if face not in cube_faces:
@@ -86,9 +83,28 @@ def validate_cube_faces(cube_faces):
 
 
 def build_color_to_face_map(cube_faces):
+    """
+    Builds a mapping from detected sticker colors to standard cube face letters.
+
+    Kociemba's solver does not use color names directly. Instead, it expects each
+    sticker to be represented by one of the six face letters: U, R, F, D, L, or B.
+    Since the center tile of each Rubik's Cube face never moves, the center sticker
+    color determines which detected color corresponds to each face letter.
+
+    Args:
+        cube_faces (dict): A dictionary mapping face letters to 3x3 sticker grids.
+                           Each grid must have a valid center tile at index [1][1].
+
+    Returns:
+        dict: A dictionary mapping color labels to face letters.
+              Example: {"white": "U", "red": "R", "green": "F", ...}
+
+    Raises:
+        ValueError: If two faces have the same center color, which indicates that the
+                    same face may have been scanned twice or color classification failed.
+    """
     color_to_face = {}
 
-    # The center sticker of each face determines that face's color identity
     for face in FACE_ORDER:
         center_color = cube_faces[face][1][1]
 
