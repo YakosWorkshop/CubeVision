@@ -39,3 +39,19 @@ def validate_cube_faces(cube_faces):
 
     return True, "ok"
 
+
+def build_color_to_face_map(cube_faces):
+    color_to_face = {}
+
+    # The center sticker of each face determines that face's color identity
+    for face in FACE_ORDER:
+        center_color = cube_faces[face][1][1]
+
+        if center_color in color_to_face:
+            raise ValueError(f"Duplicate center color detected: {center_color}")
+
+        color_to_face[center_color] = face
+
+    return color_to_face
+
+
