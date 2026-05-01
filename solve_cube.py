@@ -40,3 +40,7 @@ def main():
         print("\nSolver failed.")
         print(exc)
         print("This usually means the scanned cube state is not physically valid.")
+
+
+if __name__ == "__main__":
+    main()
