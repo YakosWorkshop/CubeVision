@@ -55,3 +55,24 @@ def build_color_to_face_map(cube_faces):
     return color_to_face
 
 
+def build_kociemba_string(cube_faces):
+    valid, message = validate_cube_faces(cube_faces)
+
+    if not valid:
+        raise ValueError(message)
+
+    color_to_face = build_color_to_face_map(cube_faces)
+
+    cube_string = ""
+
+    # Kociemba expects the order U, R, F, D, L, B
+    for face in FACE_ORDER:
+        stickers = flatten_grid(cube_faces[face])
+
+        for color in stickers:
+            cube_string += color_to_face[color]
+
+    if len(cube_string) != 54:
+        raise ValueError(f"Cube string length is {len(cube_string)}, expected 54")
+
+    return cube_string
