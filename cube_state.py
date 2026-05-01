@@ -31,7 +31,29 @@ def flatten_grid(grid):
 
 
 def validate_cube_faces(cube_faces):
-    # Make sure all six faces exist
+    """
+    Validates that a scanned cube contains all required faces and valid color counts.
+
+    This function performs basic consistency checks before the cube is passed to the
+    solver. It verifies that all six faces are present, that each face contains exactly
+    9 stickers, that no sticker was classified as "unknown", and that the full cube
+    contains exactly six colors with nine occurrences of each color.
+
+    These checks do not guarantee that the cube state is physically solvable, but they
+    catch common scanning and classification errors before calling Kociemba's algorithm.
+
+    Args:
+        cube_faces (dict): A dictionary mapping cube face names to 3x3 sticker grids.
+                           Expected keys are "U", "R", "F", "D", "L", and "B".
+
+    Returns:
+        tuple: A pair in the form (is_valid, message), where:
+            - is_valid (bool): True if the cube passes the basic validation checks.
+            - message (str): "ok" if valid, otherwise an explanation of the failure.
+
+    Raises:
+        None
+    """
     for face in FACE_ORDER:
         if face not in cube_faces:
             return False, f"Missing face {face}"
