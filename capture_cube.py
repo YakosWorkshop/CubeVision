@@ -91,4 +91,28 @@ def main():
             2,
             cv.LINE_AA,
         )
+        
+        cv.imshow("Cube Capture", annotated)
 
+        key = cv.waitKey(1) & 0xFF
+
+        if key == ord("q"):
+            break
+
+        if key == ord("r"):
+            print(f"Rescanning {face_name} face.")
+            continue
+
+        if key == ord("\r") and valid_face:
+            center_color = face_grid[1][1]
+
+            cube_faces[face_name] = face_grid
+            captured_center_colors.add(center_color)
+
+            print(f"\nSaved {face_name} face with center color '{center_color}':")
+            for row in face_grid:
+                print(row)
+
+            print(f"Progress: {len(cube_faces)}/6 faces captured\n")
+
+            current_face_index += 1
