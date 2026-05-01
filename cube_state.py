@@ -4,6 +4,29 @@ FACE_ORDER = ["U", "R", "F", "D", "L", "B"]
 
 
 def flatten_grid(grid):
+    """
+    Converts a 3x3 face grid into a single flat list of sticker labels.
+
+    This function takes a nested list representing one face of the Rubik's Cube
+    and flattens it in row-major order. The resulting list is easier to validate,
+    count, and convert into the 54-character cube string required by Kociemba's
+    solving algorithm.
+
+    Args:
+        grid (list): A 3x3 nested list representing one cube face:
+            [[top_left, top_center, top_right],
+             [mid_left, mid_center, mid_right],
+             [bot_left, bot_center, bot_right]]
+
+    Returns:
+        list: A flat list containing the 9 sticker labels in row-major order.
+
+    Example:
+        >>> flatten_grid([["white", "white", "red"],
+        ...               ["blue", "white", "green"],
+        ...               ["orange", "yellow", "red"]])
+        ["white", "white", "red", "blue", "white", "green", "orange", "yellow", "red"]
+    """
     return [cell for row in grid for cell in row]
 
 
