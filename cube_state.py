@@ -117,6 +117,38 @@ def build_color_to_face_map(cube_faces):
 
 
 def build_kociemba_string(cube_faces):
+    """
+    Converts scanned cube faces into the 54-character string required by Kociemba.
+
+    This function first validates the scanned cube data, then creates a color-to-face
+    mapping using the center stickers. It converts each sticker color into its
+    corresponding cube face letter and concatenates the result in Kociemba's expected
+    face order: U, R, F, D, L, B.
+
+    Args:
+        cube_faces (dict): A dictionary containing all six scanned faces as 3x3 grids.
+                           Expected format:
+                           {
+                               "U": [[...], [...], [...]],
+                               "R": [[...], [...], [...]],
+                               "F": [[...], [...], [...]],
+                               "D": [[...], [...], [...]],
+                               "L": [[...], [...], [...]],
+                               "B": [[...], [...], [...]]
+                           }
+
+    Returns:
+        str: A 54-character cube string using only the letters U, R, F, D, L, and B.
+
+    Raises:
+        ValueError: If cube validation fails.
+        ValueError: If duplicate center colors are detected.
+        ValueError: If the generated cube string is not exactly 54 characters long.
+
+    Example:
+        >>> build_kociemba_string(cube_faces)
+        'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
+    """
     valid, message = validate_cube_faces(cube_faces)
 
     if not valid:
