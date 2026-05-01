@@ -116,3 +116,17 @@ def main():
             print(f"Progress: {len(cube_faces)}/6 faces captured\n")
 
             current_face_index += 1
+
+    cap.release()
+    cv.destroyAllWindows()
+
+    if len(cube_faces) == 6:
+        output_path = Path(args.output)
+        output_path.write_text(json.dumps(cube_faces, indent=2), encoding="utf-8")
+        print(f"Saved full cube to {output_path}")
+    else:
+        print("Cube capture incomplete. No full cube file saved.")
+
+
+if __name__ == "__main__":
+    main()
