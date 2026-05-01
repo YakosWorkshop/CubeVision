@@ -27,48 +27,44 @@ def parse_args():
 
 
 def extract_detections(result, frame):
-    """
-    Extract detection information from a YOLO detection result object.
-    This function processes the detection results from a YOLO model and converts them
-    into a standardized dictionary format containing label, confidence score, and
-    center coordinates for each detected object.
-    
-    Args:
-        result: A YOLO result object containing boxes with detection information.
-                Expected to have attributes: boxes (with xyxy, cls, conf) and names.
-                
-    Returns:
-        list: A list of dictionaries, each containing:
-            - label (str): The class name of the detected object
-            - confidence (float): The confidence score of the detection (0.0 to 1.0)
-            - cx (float): The x-coordinate of the bounding box center
-            - cy (float): The y-coordinate of the bounding box center
-        Returns an empty list if no boxes are detected or if result.boxes is None.
-        
-    Raises:
-        None: Gracefully handles None boxes by returning an empty list.
-    """
     detections = []
     boxes = result.boxes
+
     if boxes is None:
         return detections
 
-    names = result.names
     xyxy_values = boxes.xyxy.cpu().tolist()
-    class_ids = boxes.cls.cpu().tolist()
     confidences = boxes.conf.cpu().tolist()
 
-    for xyxy, class_id, confidence in zip(xyxy_values, class_ids, confidences):
-        x1, y1, x2, y2 = xyxy
+    height, width = frame.shape[:2]
+
+    for xyxy, confidence in zip(xyxy_values, confidences):
+        x1, y1, x2, y2 = map(int, xyxy)
+
+        x1 = max(0, min(x1, width - 1))
+        x2 = max(0, min(x2, width - 1))
+        y1 = max(0, min(y1, height - 1))
+        y2 = max(0, min(y2, height - 1))
+
+        if x2 <= x1 or y2 <= y1:
+            continue
+
+        roi = frame[y1:y2, x1:x2]
+        color_label = classify_color_bgr(roi)
+
         detections.append(
             {
-                "label": names[int(class_id)],
+                "label": color_label,
                 "confidence": float(confidence),
                 "cx": (x1 + x2) / 2.0,
                 "cy": (y1 + y2) / 2.0,
+                "bbox": [x1, y1, x2, y2],
             }
         )
-    return detections
+
+    detections = sorted(detections, key=lambda det: det["confidence"], reverse=True)
+
+    return detections[:9]
 
 
 def draw_face_grid(frame, face_grid, origin=(20, 20), cell_size=52):
@@ -131,7 +127,7 @@ def main():
         )
         result = results[0]
         annotated = result.plot()
-        detections = extract_detections(result)
+        detections = extract_detections(result, frame)
 
         save_message = "Press ENTER to save current face"
         if len(detections) == 9:
