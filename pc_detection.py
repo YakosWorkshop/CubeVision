@@ -27,6 +27,44 @@ def parse_args():
 
 
 def extract_detections(result, frame):
+    """
+    Extracts and processes YOLO sticker detections from a webcam frame.
+
+    This function converts raw YOLO detection outputs into structured sticker
+    detections that can later be organized into a 3x3 Rubik's Cube face grid.
+    Each detected sticker bounding box is cropped from the original frame and
+    classified using HSV-based color detection.
+
+    The returned detections contain:
+        - sticker color label
+        - detection confidence
+        - sticker center coordinates
+        - sticker bounding box coordinates
+
+    Detections are sorted by confidence score and trimmed to the top 9 results,
+    since a valid Rubik's Cube face should contain exactly 9 visible stickers.
+
+    Args:
+        result: YOLO inference result object containing bounding boxes and
+                confidence scores.
+        frame: Original webcam frame (numpy array) used for extracting sticker
+               regions of interest.
+
+    Returns:
+        list: A list of detection dictionaries in the format:
+              {
+                  "label": str,
+                  "confidence": float,
+                  "cx": float,
+                  "cy": float,
+                  "bbox": [x1, y1, x2, y2]
+              }
+
+    Example:
+        >>> detections = extract_detections(result, frame)
+        >>> detections[0]["label"]
+        'red'
+    """
     detections = []
     boxes = result.boxes
 
