@@ -35,3 +35,60 @@ def main():
     print("Press ENTER to save the current face.")
     print("Press R to rescan current face.")
     print("Press Q to quit.")
+    
+    while current_face_index < len(FACE_ORDER):
+        face_name = FACE_ORDER[current_face_index]
+
+        ok, frame = cap.read()
+        if not ok:
+            break
+
+        results = model.predict(source=frame, conf=args.conf, verbose=False)
+        result = results[0]
+        annotated = result.plot()
+
+        detections = extract_detections(result, frame)
+
+        if len(detections) == 9:
+            try:
+                face_grid = build_face_grid(detections)
+                draw_face_grid(annotated, face_grid)
+
+                center_color = face_grid[1][1]
+
+                if center_color in captured_center_colors:
+                    message = (
+                        f"{face_name}: center '{center_color}' already captured. "
+                        f"Show a different face."
+                    )
+                    valid_face = False
+                else:
+                    message = (
+                        f"Show {face_name} face "
+                        f"({len(cube_faces)}/6 saved). ENTER = save."
+                    )
+                    valid_face = True
+
+            except ValueError as exc:
+                face_grid = None
+                message = f"Grid error: {exc}"
+                valid_face = False
+        else:
+            face_grid = None
+            message = (
+                f"Show {face_name} face ({len(cube_faces)}/6 saved). "
+                f"Need 9 stickers, found {len(detections)}."
+            )
+            valid_face = False
+
+        cv.putText(
+            annotated,
+            message,
+            (20, annotated.shape[0] - 20),
+            cv.FONT_HERSHEY_SIMPLEX,
+            0.65,
+            (0, 255, 0) if valid_face else (0, 0, 255),
+            2,
+            cv.LINE_AA,
+        )
+
