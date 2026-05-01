@@ -13,6 +13,34 @@ FACE_ORDER = ["U", "R", "F", "D", "L", "B"]
 
 
 def main():
+    """
+    Captures all six faces of a Rubik's Cube using a webcam and YOLO sticker detection.
+
+    This function guides user through scanning cube faces in a fixed order:
+    U, R, F, D, L, B. For each face, the program waits until exactly 9 stickers are
+    detected, organizes those detections into a 3x3 grid, and allows the user to save
+    the face. The center sticker color is used to prevent the same face from being
+    captured more than once, since the center tile of a Rubik's Cube face never changes.
+
+    The final output is a JSON file containing all six captured face grids. This file
+    can then be passed into the cube-state conversion and Kociemba solving pipeline.
+
+    Args:
+        None directly. Command-line arguments are parsed inside the function:
+            --model (str): Path to the YOLO model weights. Defaults to "best.pt".
+            --cam_id (int): Camera device index. Defaults to 0.
+            --conf (float): YOLO detection confidence threshold. Defaults to 0.5.
+            --output (str): Output JSON file for the captured cube faces.
+                            Defaults to "cube_faces.json".
+
+    Returns:
+        None
+
+    Raises:
+        RuntimeError: If the specified camera cannot be opened.
+        OSError: If the output JSON file cannot be written.
+        TypeError: If the cube face data cannot be serialized to JSON.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, default="best.pt")
     parser.add_argument("--cam_id", type=int, default=0)
