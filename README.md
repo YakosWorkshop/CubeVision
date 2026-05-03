@@ -9,11 +9,11 @@ cd CubeVision
 ## 2. execute run_ultralytics_jetson.sh
 
 ### IMPORTANT: -v /home/csuser/cs4391_spring26:/ultralytics/cs4391_spring26 will have 
-### to be edited to the directory of CubeVision
+### to be edited to the directory of CubeVision in inside run_ultralytics_jetson.sh
 ### Example: -v /home/username/path/CubeVision:/ultralytics/CubeVision
  	
 ### it will request password in order to execute
-./run_ultralytics_jetson.sh
+sh ./run_ultralytics_jetson.sh
  
 ## 3. update/install dependencies
 
@@ -27,17 +27,9 @@ apt-get update
 
 apt-get install -y libgtk2.0-dev pkg-config libgl1-mesa-glx libglib2.0-0
 
-## 4. run jetson_detection.py
-
-python jetson_detection.py --model best.pt
-
-## 5. quit application
-
-press Q to exit application
-
 # Running the Full Cube Solver Pipeline
 
-## 6. capture all six cube faces
+## 4. capture all six cube faces
 
 python capture_cube.py --model best.pt
 
@@ -60,7 +52,7 @@ python capture_cube.py --model best.pt --cam_id 1
 - duplicate faces are automatically rejected using the center tile color
 - all six captured faces are saved into cube_faces.json
 
-## 7. compute the Rubik's Cube solution
+## 5. compute the Rubik's Cube solution
 
 python solve_cube.py --input cube_faces.json
 
@@ -72,7 +64,7 @@ python solve_cube.py --input cube_faces.json
 ### Example output:
 R U R' U' F2 L D2
 
-## 8. recommended full run order
+## 6. recommended full run order
 
 python jetson_detection.py --model best.pt
 
