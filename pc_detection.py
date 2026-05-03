@@ -2,6 +2,7 @@ import argparse
 from pathlib import Path
 import cv2 as cv
 from ultralytics import YOLO
+from color_utils import classify_color_bgr
 from face_grid import build_face_grid, save_face_grid
 
 
