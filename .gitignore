@@ -7,3 +7,6 @@ rubik's-cube-sticker-detection/
 runs
 rubik's-cube-sticker-detection-1
 saved_faces
+
+# Python cache
+__pycache__/
