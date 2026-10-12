@@ -10,3 +10,7 @@ saved_faces
 
 # Python cache
 __pycache__/
+
+pyproject.toml
+uv.lock
+cube_faces.json
