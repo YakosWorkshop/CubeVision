@@ -1,5 +1,4 @@
 import cv2 as cv
-import numpy as np
 
 COLOR_ORDER = ["white", "yellow", "red", "orange", "blue", "green"]
 
