@@ -1,21 +1,25 @@
 import argparse
 from pathlib import Path
+
 import cv2 as cv
-from ultralytics import YOLO
-from color_utils import classify_color_bgr
 from face_grid import build_face_grid, save_face_grid
+from numpy.typing import NDArray
+from ultralytics import YOLO
+from ultralytics.engine.results import Results
+
+from color_utils import classify_color_bgr
 
 
 def parse_args():
     """
     Parse and return command-line arguments for the Rubiks cube detection program.
-    
+
     Arguments:
         --model (str): Path to the model file. Required.
         --cam_id (int): Camera ID to use for input. Defaults to 0.
         --conf (float): Confidence threshold for detections. Defaults to 0.5.
         --output (str): Directory path for saving output. Defaults to "saved_faces".
-    
+
     Returns:
         argparse.Namespace: Parsed command-line arguments.
     """
@@ -27,7 +31,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def extract_detections(result, frame):
+def extract_detections(result: Results, frame: NDArray):
     """
     Extracts and processes YOLO sticker detections from a webcam frame.
 
@@ -72,12 +76,13 @@ def extract_detections(result, frame):
     if boxes is None:
         return detections
 
-    xyxy_values = boxes.xyxy.cpu().tolist()
-    confidences = boxes.conf.cpu().tolist()
+    xyxy_values = boxes.xyxy.tolist()
+    confidences = boxes.conf.tolist()
+    class_ids = boxes.cls.tolist()
 
     height, width = frame.shape[:2]
 
-    for xyxy, confidence in zip(xyxy_values, confidences):
+    for xyxy, confidence, class_id in zip(xyxy_values, confidences, class_ids):
         x1, y1, x2, y2 = map(int, xyxy)
 
         x1 = max(0, min(x1, width - 1))
@@ -88,8 +93,13 @@ def extract_detections(result, frame):
         if x2 <= x1 or y2 <= y1:
             continue
 
-        roi = frame[y1:y2, x1:x2]
-        color_label = classify_color_bgr(roi)
+        model_label = result.names[int(class_id)]
+
+        if model_label == "center":
+            roi = frame[y1:y2, x1:x2]
+            color_label = classify_color_bgr(roi)
+        else:
+            color_label = model_label
 
         detections.append(
             {
@@ -109,16 +119,16 @@ def extract_detections(result, frame):
 def draw_face_grid(frame, face_grid, origin=(20, 20), cell_size=52):
     """
     Draw a grid of labeled cells on a frame, typically used for face detection visualization.
-    
+
     Args:
         frame: The image frame (numpy array) on which to draw the grid.
         face_grid: A 2D list/array of strings where each element is a label for the corresponding grid cell.
         origin: A tuple (x, y) representing the top-left corner coordinates where the grid starts. Defaults to (20, 20).
         cell_size: The size of each grid cell in pixels (both width and height). Defaults to 52.
-    
+
     Returns:
         None. Modifies the frame in-place by drawing the grid and labels.
-    
+
     Example:
         >>> face_grid = [['A', 'B'], ['C', 'D']]
         >>> draw_face_grid(frame, face_grid, origin=(10, 10), cell_size=50)
@@ -195,7 +205,7 @@ def main():
         key = cv.waitKey(1) & 0xFF
         if key == ord("q"):
             break
-        if key == ord('\r') and face_grid is not None:
+        if key == ord("\r") and face_grid is not None:
             output_path = output_dir / f"face_{frame_index:05d}.json"
             save_face_grid(face_grid, output_path, source_frame=frame_index)
             print(f"Saved face grid to {output_path}")

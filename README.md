@@ -32,7 +32,7 @@ apt-get install -y libgtk2.0-dev pkg-config libgl1-mesa-glx libglib2.0-0
 
 ## 4. capture all six cube faces
 ```bash 
-python capture_cube.py --model best.pt
+python cube_capture.py --model best.pt
 ```
 
 ### Show the cube faces in this order:
@@ -47,7 +47,7 @@ Q -> quit application
 
 ### If the camera does not open:
 ```bash 
-python capture_cube.py --model best.pt --cam_id 1
+python cube_capture.py --model best.pt --cam_id 1
 ```
 
 ### Notes:
@@ -58,7 +58,7 @@ python capture_cube.py --model best.pt --cam_id 1
 
 ## 5. compute the Rubik's Cube solution
 ```bash 
-python solve_cube.py --input cube_faces.json
+python cube_solver.py --input cube_faces.json
 ```
 
 ### The program will:
@@ -73,6 +73,6 @@ R U R' U' F2 L D2
 
 ```bash
 python jetson_detection.py --model best.pt
-python capture_cube.py --model best.pt
-python solve_cube.py --input cube_faces.json 
+python cube_capture.py --model best.pt
+python cube_solver.py --input cube_faces.json 
 ```
