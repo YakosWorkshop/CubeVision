@@ -26,11 +26,11 @@ def classify_color_bgr(roi):
         return "yellow"
 
     # orange
-    if 8 <= h < 20:
+    if 4 <= h < 20:
         return "orange"
 
     # red (wrapout in HSV)
-    if h < 8 or h >= 170:
+    if h < 4 or h >= 170:
         return "red"
 
     # blue

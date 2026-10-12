@@ -117,7 +117,7 @@ def to_grid(tiles: list[dict]) -> list[list[dict]]:
     return grid
 
 
-def draw_grid(frame, face_grid, origin=(20, 20), cell_size=52):
+def draw_grid(frame, face_grid, origin=(20, 20), cell_size=100):
     """Draw a labeled representation of a detection grid onto an image.
 
     Each grid cell is rendered as a white square containing the detection's
@@ -137,14 +137,27 @@ def draw_grid(frame, face_grid, origin=(20, 20), cell_size=52):
             y1 = y0 + row_index * cell_size
             x2 = x1 + cell_size
             y2 = y1 + cell_size
-            cv.rectangle(frame, (x1, y1), (x2, y2), (255, 255, 255), 2)
+            cv.rectangle(
+                frame,
+                (x1, y1),
+                (x2, y2),
+                (255, 255, 255),
+                cv.FILLED,
+            )
+            cv.rectangle(
+                frame,
+                (x1, y1),
+                (x2, y2),
+                (0, 0, 0),
+                2,
+            )
             cv.putText(
                 frame,
                 str(tile["label"]),
                 (x1 + 4, y1 + cell_size // 2),
                 cv.FONT_HERSHEY_SIMPLEX,
-                0.45,
-                (255, 255, 255),
+                0.85,
+                (0, 0, 0),
                 1,
                 cv.LINE_AA,
             )
@@ -234,13 +247,13 @@ def main():
 
                 if center_color["label"] != FACES[face_name]:
                     message = (
-                        f"{face_name}: current center is '{center_color['label']}, but {FACES[face_name]} is required "
+                        f"{face_name}: current center is '{center_color['label']}', but '{FACES[face_name]}' is required "
                         f"Show a different face."
                     )
                     is_valid = False
                 else:
                     message = (
-                        f"Ready to capture {face_name} face "
+                        f"{face_name}: Ready to capture '{FACES[face_name]}' face "
                         f"({len(cube_faces)}/6 saved). ENTER = save."
                     )
                     is_valid = True
@@ -251,7 +264,7 @@ def main():
         else:
             grid = None
             message = (
-                f"Show {face_name} face ({len(cube_faces)}/6 saved). Need 9 tiles."
+                f"{face_name}: Show '{FACES[face_name]}' face ({len(cube_faces)}/6 saved). Need 9 tiles."
             )
             is_valid = False
 
@@ -260,7 +273,7 @@ def main():
             message,
             (20, annotated.shape[0] - 20),
             cv.FONT_HERSHEY_SIMPLEX,
-            0.65,
+            1,
             (0, 255, 0) if is_valid else (0, 0, 255),
             2,
             cv.LINE_AA,
